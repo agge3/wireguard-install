@@ -60,6 +60,7 @@ function checkOS() {
 		if [[ ${VERSION_ID} -lt '15.4' ]]; # check version
 			echo "Your version of openSUSE Leap (${VERSION_ID}) is not supported. Please use openSUSE Leap 15.4 or later" # not supported version
 			exit 1
+		fi
 	elif [[ -e /etc/oracle-release ]]; then
 		source /etc/os-release
 		OS=oracle
