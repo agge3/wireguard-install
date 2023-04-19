@@ -56,13 +56,13 @@ function checkOS() {
 			echo "Your version of CentOS (${VERSION_ID}) is not supported. Please use CentOS 8 or later"
 			exit 1
 		fi
-	elif [[ ${OS} == 'opensuse-leap' ]]; then # /etc/os-release ID="opensuse-leap"
-		if [[ ${VERSION_ID} -lt "15.4" ]]; then # error, check version
-			echo "Your version of openSUSE Leap (${VERSION_ID}) is not supported. Please use openSUSE Leap 15.4 or later" # not supported version
+	elif [[ ${OS} == "opensuse-leap" ]]; then # openSUSE Leap 15+ support
+		if [[ ${VERSION_ID} -lt 15 ]]; then
+			echo "Your version of openSUSE Leap (${VERSION_ID}) is not supported. Please use openSUSE Leap 15 or later" # not supported version
 			exit 1
 		fi
-	elif [[ ${OS} == 'opensuse-tumbleweed' ]]; then
-		OS='opensuse-tumbleweed' # error
+	elif [[ ${OS} == "opensuse-tumbleweed" ]]; then # openSUSE Tumbleweed support
+		OS='opensuse-tumbleweed'
 	elif [[ -e /etc/oracle-release ]]; then
 		source /etc/os-release
 		OS=oracle
@@ -203,11 +203,11 @@ function installWireGuard() {
 			yum install -y qrencode # not available on release 9
 		fi
 		yum install -y wireguard-tools iptables
-	elif [[ ${OS} == 'opensuse-leap' ]]; then # install openSUSE Leap 15.4
+	elif [[ ${OS} == 'opensuse-leap' ]]; then # install openSUSE Leap 15.4 wireguard
 		if [[ ${VERSION_ID} -lt '15.4' ]]; then # check version
 			zypper -n install wireguard-tools qrencode iptables # zypper non-interactive install command
 		fi
-	elif [[ ${OS} == 'opensuse-tumbleweed' ]]; then # install openSUSE Tumbleweed
+	elif [[ ${OS} == 'opensuse-tumbleweed' ]]; then # install openSUSE Tumbleweed wireguard
 		zypper -n install wireguard-tools qrencode iptables # zypper non-interactive install command
 	elif [[ ${OS} == 'oracle' ]]; then
 		dnf install -y oraclelinux-developer-release-el8
