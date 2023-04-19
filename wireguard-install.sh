@@ -57,7 +57,7 @@ function checkOS() {
 			exit 1
 		fi
 	elif [[ ${OS} == 'opensuse-leap' ]]; then # /etc/os-release ID="opensuse-leap"
-		if [[ ${VERSION_ID} -lt '15.4' ]]; then # check version
+		if [[ ${VERSION_ID} != '15.4' ]]; then # error, check version
 			echo "Your version of openSUSE Leap (${VERSION_ID}) is not supported. Please use openSUSE Leap 15.4 or later" # not supported version
 			exit 1
 		fi
