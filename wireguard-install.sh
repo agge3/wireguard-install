@@ -62,7 +62,7 @@ function checkOS() {
 			exit 1
 		fi
 	elif [[ ${OS} == 'opensuse-tumbleweed' ]]; then
-		OS=opensuse-tumbleweed
+		OS=opensuse-tumbleweed # error
 	elif [[ -e /etc/oracle-release ]]; then
 		source /etc/os-release
 		OS=oracle
