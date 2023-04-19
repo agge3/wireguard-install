@@ -56,13 +56,17 @@ function checkOS() {
 			echo "Your version of CentOS (${VERSION_ID}) is not supported. Please use CentOS 8 or later"
 			exit 1
 		fi
+	elif [[ ${OS} == 'opensuse-leap' ]]; then # /etc/os-release ID="opensuse-leap"
+		if [[ ${VERSION_ID} -lt '15.4' ]]; # check version
+			echo "Your version of openSUSE Leap (${VERSION_ID}) is not supported. Please use openSUSE Leap 15.4 or later" # not supported version
+			exit 1
 	elif [[ -e /etc/oracle-release ]]; then
 		source /etc/os-release
 		OS=oracle
 	elif [[ -e /etc/arch-release ]]; then
 		OS=arch
 	else
-		echo "Looks like you aren't running this installer on a Debian, Ubuntu, Fedora, CentOS, AlmaLinux, Oracle or Arch Linux system"
+		echo "Looks like you aren't running this installer on a Debian, Ubuntu, Fedora, CentOS, AlmaLinux, openSUSE Leap, openSUSE Tumbleweed, Oracle, or Arch Linux system"
 		exit 1
 	fi
 }
@@ -196,13 +200,19 @@ function installWireGuard() {
 			yum install -y qrencode # not available on release 9
 		fi
 		yum install -y wireguard-tools iptables
+	elif [[ ${OS} == 'opensuse-leap' ]]; then # install openSUSE Leap 15.4
+		if [[ ${VERSION_ID} -lt '15.4']]; then # check version
+			zypper -n in wireguard-tools qrencode iptables # zypper non-interactive install command
+		fi
+	elif [[ ${OS} == 'opensuse-tumbleweed' ]]; then # install /etc/os-release ID="opensuse-tumbleweed"
+		zypper -n in wireguard-tools qrencode iptables # zypper non-interactive install command
 	elif [[ ${OS} == 'oracle' ]]; then
 		dnf install -y oraclelinux-developer-release-el8
 		dnf config-manager --disable -y ol8_developer
 		dnf config-manager --enable -y ol8_developer_UEKR6
 		dnf config-manager --save -y --setopt=ol8_developer_UEKR6.includepkgs='wireguard-tools*'
 		dnf install -y wireguard-tools qrencode iptables
-	elif [[ ${OS} == 'arch' ]]; then
+	elif [[ ${OS} == 'arch' ]]; thensud
 		pacman -S --needed --noconfirm wireguard-tools qrencode
 	fi
 
@@ -454,6 +464,12 @@ function uninstallWg() {
 			if [[ ${VERSION_ID} == 8* ]]; then
 				yum remove --noautoremove kmod-wireguard qrencode
 			fi
+		elif [[ ${OS} == 'opensuse-leap' ]]; then # remove openSUSE Leap 15.4
+			if [[ ${VERSION_ID} -lt '15.4']]; then # check version
+				zypper -n rm wireguard-tools qrencode # zypper non-interactive remove command
+			fi
+		elif [[ ${OS} == 'opensuse-tumbleweed' ]]; then # remove openSUSE Tumbleweed
+				zypper -n rm wireguard-tools qrencode # zypper non-interactive remove command
 		elif [[ ${OS} == 'oracle' ]]; then
 			yum remove --noautoremove wireguard-tools qrencode
 		elif [[ ${OS} == 'arch' ]]; then
